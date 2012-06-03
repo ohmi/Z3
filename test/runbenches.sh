@@ -6,17 +6,13 @@ export GNUPLOT_DEFAULT_GDFONT=verdana
 dir=./benches
 cd `dirname "$0"`
 for file in `ls $dir/*.ml`; do
-    if [ "$file" = "$dir/mandelbrot.ml" ]; then
-        ocamlopt graphics.cmxa "$file" -o "$file.opt" 2>/dev/null
-        ocamlc graphics.cma -dllpath /usr/lib/ocaml/stublibs "$file" 2>/dev/null
-    else
-        ocamlopt "$file" -o "$file.opt" 2>/dev/null
-        ocamlc "$file" 2>/dev/null
-    fi
+    ocamlopt "$file" -o "$file.opt" 2>/dev/null
+    ocamlc "$file" 2>/dev/null
+    ocamlclean a.out
 
     opt=`/usr/bin/time -f '%E' "./$file.opt" 2>&1`
     run=`/usr/bin/time -f '%E' ocamlrun a.out 2>&1`
-    z3=`../bin/Z3 -t a.out 2>/dev/null` 
+    z3=`../bin/Z3 -o -t a.out 2>/dev/null` 
 
 
     echo "$file"
